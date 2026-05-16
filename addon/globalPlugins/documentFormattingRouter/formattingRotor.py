@@ -16,6 +16,24 @@ from .fuzzyItemSearch import FuzzyItemSearch
 ConfigValidationData = config.ConfigValidationData
 
 
+def _configKeyExists(configKey: str) -> bool:
+    try:
+        validateInfo = config.conf.getConfigValidation(["documentFormatting", configKey])
+    except Exception:
+        return False
+    return isinstance(validateInfo, ConfigValidationData)
+
+
+def _getSpellingErrorsConfigKey() -> str:
+    return "reportSpellingErrors2" if _configKeyExists("reportSpellingErrors2") else "reportSpellingErrors"
+
+
+def _formattingItemIfConfigKeyExists(name: str, configKey: str) -> list[FormattingItem]:
+    if not _configKeyExists(configKey):
+        return []
+    return [FormattingItem(name, configKey)]
+
+
 class LastChangedState(Enum):
     ITEM = auto()
     CATEGORY = auto()
@@ -124,8 +142,8 @@ class FormattingRotor(FakeUi):
             ),
             FormattingItem(
                 # Translators: This is an item in the document formatting rotor.
-                _("Spelling errors"),
-                "reportSpellingErrors",
+                _("Spelling and grammar errors"),
+                _getSpellingErrorsConfigKey(),
             ),
         ],
         [
@@ -198,6 +216,11 @@ class FormattingRotor(FakeUi):
                 _("Links"),
                 "reportLinks",
             ),
+            *_formattingItemIfConfigKeyExists(
+                # Translators: This is an item in the document formatting rotor.
+                _("Link type"),
+                "reportLinkType",
+            ),
             FormattingItem(
                 # Translators: This is an item in the document formatting rotor.
                 _("Graphics"),
@@ -232,6 +255,11 @@ class FormattingRotor(FakeUi):
                 # Translators: This is an item in the document formatting rotor.
                 _("Frames"),
                 "reportFrames",
+            ),
+            *_formattingItemIfConfigKeyExists(
+                # Translators: This is an item in the document formatting rotor.
+                _("Figures and captions"),
+                "reportFigures",
             ),
             FormattingItem(
                 # Translators: This is an item in the document formatting rotor.
@@ -354,11 +382,11 @@ class FormattingRotor(FakeUi):
             case ConfigValidationData(validationFuncName='boolean'):
                 self.config[formattingItem.configKey] = not self.config[formattingItem.configKey]
             case ConfigValidationData(validationFuncName='integer'):
-                min, max = validateInfo.args
-                cur = self.config[formattingItem.configKey] + 1
-                if cur > int(max):
-                    cur = int(min)
-                self.config[formattingItem.configKey] = cur
+                self.config[formattingItem.configKey] = formattingRotorUtils.getNextConfigValue(
+                    formattingItem.configKey,
+                    self.config[formattingItem.configKey],
+                    validateInfo.args,
+                )
             case _:
                 # There shouldn't be any str, or other funcs.
                 pass

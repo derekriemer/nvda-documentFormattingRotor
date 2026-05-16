@@ -27,7 +27,10 @@ addon_info = {
 						Press nvda/g to envoke.
 						"""),
 	# version
-	"addon_version": "1.1",
+	"addon_version": "1.2",
+	# Brief changelog for this version
+	# Translators: what's new content for the add-on version to be shown in the add-on store
+	"addon_changelog": _("""Adds compatibility with NVDA 2026.1, including support for the updated spelling and grammar error reporting setting."""),
 	# Author(s)
 	"addon_author": "Derek Riemer <driemer.riemer@gmail.com>",
 	# URL for the add-on documentation support
@@ -39,15 +42,15 @@ addon_info = {
 	# Minimum NVDA version supported (e.g. "2018.3.0", minor version is optional)
 	"addon_minimumNVDAVersion": "2024.1",
 	# Last NVDA version supported/tested (e.g. "2018.4.0", ideally more recent than minimum version)
-	"addon_lastTestedNVDAVersion": "2025.1",
+	"addon_lastTestedNVDAVersion": "2026.1",
 	# Add-on update channel (default is None, denoting stable releases,
 	# and for development releases, use "dev".)
 	# Do not change unless you know what you are doing!
 	"addon_updateChannel": None,
 	# Add-on license such as GPL 2
-	"addon_license": None,
+	"addon_license": "GPL-2.0-or-later",
 	# URL for the license document the ad-on is licensed under
-	"addon_licenseURL": None,
+	"addon_licenseURL": "https://github.com/derekriemer/nvda-documentFormattingRotor/blob/master/COPYING.txt",
 }
 
 # Define the python files that are the sources of your add-on.
